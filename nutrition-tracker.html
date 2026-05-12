@@ -852,6 +852,12 @@
   async function doSignOut() {
     if (unsubscribeCloud) { unsubscribeCloud(); unsubscribeCloud = null; }
     await fbSignOut(auth);
+    // Clear all local data so the next person sees a blank app
+    allDays = {};
+    goals   = { cal: 1500, prot: 130 };
+    localStorage.removeItem(STORAGE_KEY);
+    localStorage.removeItem(GOALS_KEY);
+    render();
   }
 
   async function saveToCloud() {
