@@ -368,6 +368,80 @@
       line-height: 1.6;
     }
 
+    /* ── Auth bar ────────────────────────── */
+    .auth-bar {
+      padding: 10px 28px;
+      background: #b8cdb4;
+      border-bottom: 1px solid #a8bda4;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      min-height: 38px;
+    }
+
+    .auth-btn {
+      font-family: 'Jost', sans-serif;
+      font-size: 0.65rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      font-weight: 500;
+      background: var(--ink);
+      color: #f8f5f0;
+      border: none;
+      padding: 7px 14px;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+
+    .auth-btn:hover { background: #4a3d35; }
+
+    .auth-signed-in {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      width: 100%;
+      justify-content: space-between;
+    }
+
+    .auth-user-info {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .auth-avatar {
+      width: 22px; height: 22px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+
+    .auth-name {
+      font-size: 0.72rem;
+      color: #3a5a3e;
+      font-weight: 400;
+      letter-spacing: 0.02em;
+    }
+
+    .sync-status {
+      font-size: 0.62rem;
+      color: #5a7a5e;
+      letter-spacing: 0.08em;
+    }
+
+    .auth-signout-btn {
+      font-family: 'Jost', sans-serif;
+      font-size: 0.6rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      background: none;
+      border: none;
+      color: #6b8a6e;
+      cursor: pointer;
+      text-decoration: underline;
+      text-underline-offset: 2px;
+    }
+
     /* ── History / Calendar ──────────────── */
     .cal-nav {
       display: flex;
@@ -556,6 +630,23 @@
   <div class="header-date" id="today-date"></div>
 </div>
 
+<!-- Auth bar -->
+<div class="auth-bar">
+  <div id="auth-signed-out">
+    <button class="auth-btn" onclick="signIn()">Sign in with Google to sync</button>
+  </div>
+  <div id="auth-signed-in" style="display:none" class="auth-signed-in">
+    <div class="auth-user-info">
+      <img id="auth-avatar" class="auth-avatar" src="" alt="" />
+      <span class="auth-name" id="auth-user-name"></span>
+    </div>
+    <div style="display:flex;align-items:center;gap:12px">
+      <span class="sync-status" id="sync-status">● Synced</span>
+      <button class="auth-signout-btn" onclick="doSignOut()">Sign out</button>
+    </div>
+  </div>
+</div>
+
 <!-- Tabs -->
 <div class="tabs">
   <button class="tab active" onclick="switchTab('today')">Today</button>
@@ -677,7 +768,101 @@
 
 </div><!-- /panel-history -->
 
-<script>
+<script type="module">
+  // ── Firebase ────────────────────────────────────────────────────────
+  import { initializeApp }                              from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+  import { getAuth, GoogleAuthProvider, signInWithPopup,
+           onAuthStateChanged, signOut as fbSignOut }   from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
+  import { getFirestore, doc, setDoc, onSnapshot }      from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+
+  const firebaseConfig = {
+    apiKey:            'AIzaSyASLJ9vjj9eZZw2mXLHdjmaXklkodUccUk',
+    authDomain:        'nutrition-tracker-akim.firebaseapp.com',
+    projectId:         'nutrition-tracker-akim',
+    storageBucket:     'nutrition-tracker-akim.firebasestorage.app',
+    messagingSenderId: '1050533274370',
+    appId:             '1:1050533274370:web:9dd4f09afe8c89ef15d81b',
+  };
+
+  const fbApp  = initializeApp(firebaseConfig);
+  const auth   = getAuth(fbApp);
+  const db     = getFirestore(fbApp);
+
+  let currentUser        = null;
+  let unsubscribeCloud   = null;
+  let isSaving           = false;
+
+  async function signIn() {
+    try { await signInWithPopup(auth, new GoogleAuthProvider()); }
+    catch (e) { console.error('Sign-in failed', e); }
+  }
+
+  async function doSignOut() {
+    if (unsubscribeCloud) { unsubscribeCloud(); unsubscribeCloud = null; }
+    await fbSignOut(auth);
+  }
+
+  async function saveToCloud() {
+    if (!currentUser || isSaving) return;
+    isSaving = true;
+    setSyncStatus('Saving…');
+    try {
+      await setDoc(doc(db, 'users', currentUser.uid), {
+        days:  allDays,
+        goals: goals,
+        updatedAt: new Date().toISOString(),
+      });
+      setSyncStatus('● Synced');
+    } catch (e) {
+      setSyncStatus('⚠ Offline');
+      console.error('Cloud save failed', e);
+    }
+    isSaving = false;
+  }
+
+  function setSyncStatus(text) {
+    const el = document.getElementById('sync-status');
+    if (el) el.textContent = text;
+  }
+
+  function updateAuthUI(user) {
+    document.getElementById('auth-signed-out').style.display = user ? 'none'  : 'block';
+    document.getElementById('auth-signed-in').style.display  = user ? 'flex'  : 'none';
+    if (user) {
+      document.getElementById('auth-user-name').textContent = user.displayName || user.email;
+      const av = document.getElementById('auth-avatar');
+      if (user.photoURL) { av.src = user.photoURL; av.style.display = 'block'; }
+      else av.style.display = 'none';
+    }
+  }
+
+  onAuthStateChanged(auth, async (user) => {
+    currentUser = user;
+    updateAuthUI(user);
+    if (user) {
+      // Real-time listener: any change on any device updates this one instantly
+      if (unsubscribeCloud) unsubscribeCloud();
+      unsubscribeCloud = onSnapshot(doc(db, 'users', user.uid), (snap) => {
+        if (snap.exists()) {
+          const d = snap.data();
+          allDays = d.days  || {};
+          if (d.goals) goals = d.goals;
+          saveLocal();      // keep localStorage in sync too
+          render();
+          if (document.getElementById('panel-history').classList.contains('active')) renderCalendar();
+          setSyncStatus('● Synced');
+        } else {
+          // First time this user signs in — push local data up
+          saveToCloud();
+        }
+      });
+    }
+  });
+
+  // Expose auth functions to HTML onclick handlers
+  window.signIn    = signIn;
+  window.doSignOut = doSignOut;
+
   // ── Storage (permanent key — never change) ──────────────────────────
   const STORAGE_KEY = 'cleanse_nutrition';
   const GOALS_KEY   = 'cleanse_goals';
@@ -694,7 +879,10 @@
     return { cal: 1500, prot: 130 };
   }
 
-  function saveGoals(g) { localStorage.setItem(GOALS_KEY, JSON.stringify(g)); }
+  function saveGoals(g) {
+    localStorage.setItem(GOALS_KEY, JSON.stringify(g));
+    saveToCloud();
+  }
 
   // All days stored as { "YYYY-MM-DD": [meals...], ... }
   function loadAllDays() {
@@ -714,7 +902,15 @@
     } catch { return {}; }
   }
 
-  function saveAllDays(days) { localStorage.setItem(STORAGE_KEY, JSON.stringify(days)); }
+  function saveAllDays(days) {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(days));
+    saveToCloud();
+  }
+
+  function saveLocal() {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(allDays));
+    localStorage.setItem(GOALS_KEY, JSON.stringify(goals));
+  }
 
   let goals   = loadGoals();
   let allDays = loadAllDays();
@@ -1311,6 +1507,14 @@
   });
 
   render();
+
+  // Expose all onclick functions to global scope (required for type="module")
+  window.addMeal      = addMeal;
+  window.deleteMeal   = deleteMeal;
+  window.resetDay     = resetDay;
+  window.switchTab    = switchTab;
+  window.changeMonth  = changeMonth;
+  window.selectDay    = selectDay;
 </script>
 </body>
 </html>
