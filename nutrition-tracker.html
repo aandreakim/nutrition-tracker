@@ -728,111 +728,221 @@
       background: var(--bg);
     }
 
-    .login-eyebrow {
-      font-size: 0.62rem;
-      letter-spacing: 0.22em;
-      text-transform: uppercase;
-      color: #6b8a6e;
-      font-weight: 400;
+    .login-hero {
+      background: #c8d9c4;
+      padding: 56px 36px 48px;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+
+    .login-hero-icon {
+      position: absolute;
+      top: 24px;
+      right: 28px;
+      width: 28px;
+      height: 28px;
+      opacity: 0.5;
     }
 
     .login-title {
       font-family: 'Cormorant Garamond', serif;
-      font-size: 3rem;
+      font-size: 4.2rem;
       font-weight: 300;
       color: #2c3a2e;
-      line-height: 1.1;
+      line-height: 0.95;
+      margin-bottom: 20px;
     }
-
-    .login-title em { font-style: italic; font-weight: 300; }
 
     .login-subtitle {
-      margin-top: 8px;
-      font-size: 0.72rem;
+      font-size: 0.78rem;
       color: #5a7a5e;
-      letter-spacing: 0.04em;
+      letter-spacing: 0.02em;
       font-weight: 300;
+      margin-bottom: 20px;
     }
 
-    .login-section-label {
-      font-size: 0.6rem;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      color: var(--ink-light);
-      margin-bottom: 2px;
+    .login-hero-line {
+      width: 48px;
+      height: 1px;
+      background: #8aaa8e;
     }
 
-    #page-login .auth-google-btn { width: 100%; }
-
-    #page-login .auth-email-fields { gap: 10px; }
-
-    #page-login .auth-email-fields input {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      padding: 11px 14px;
-      font-size: 0.84rem;
-      border-radius: 6px;
-    }
-
-    #page-login .auth-email-fields input:focus {
-      border-color: var(--sage);
-      background: #fff;
-    }
-
-    #page-login .auth-email-btns { gap: 10px; }
-
-    #page-login .auth-email-btn {
-      padding: 11px;
-      font-size: 0.65rem;
-      border-radius: 6px;
-    }
-
-    /* Mobile: stacked layout */
-    .login-hero {
-      background: #c8d9c4;
-      padding: 72px 40px 56px;
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-    }
-
+    /* Form card */
     .login-card {
       flex: 1;
-      padding: 44px 32px 48px;
+      padding: 40px 36px 52px;
       display: flex;
       flex-direction: column;
-      gap: 14px;
-      max-width: 440px;
-      width: 100%;
-      margin: 0 auto;
+      gap: 0;
     }
 
-    /* Desktop: side-by-side layout */
+    /* Tabs */
+    .login-tabs {
+      display: flex;
+      gap: 28px;
+      margin-bottom: 36px;
+    }
+
+    .login-tab {
+      font-family: 'Jost', sans-serif;
+      font-size: 0.68rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      font-weight: 500;
+      background: none;
+      border: none;
+      border-bottom: 1.5px solid transparent;
+      padding: 0 0 6px;
+      cursor: pointer;
+      color: var(--ink-light);
+      transition: color 0.15s, border-color 0.15s;
+    }
+
+    .login-tab.active {
+      color: var(--ink);
+      border-bottom-color: var(--ink);
+    }
+
+    /* Underline fields */
+    .login-field {
+      margin-bottom: 28px;
+      position: relative;
+    }
+
+    .login-field label {
+      display: block;
+      font-size: 0.72rem;
+      color: var(--ink-light);
+      letter-spacing: 0.04em;
+      margin-bottom: 10px;
+      font-weight: 400;
+    }
+
+    .login-field input {
+      font-family: 'Jost', sans-serif;
+      font-size: 1rem;
+      width: 100%;
+      background: none;
+      border: none;
+      border-bottom: 1px solid var(--border-mid);
+      padding: 4px 0 10px;
+      color: var(--ink);
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .login-field input:focus { border-bottom-color: var(--sage); }
+
+    .login-forgot {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-size: 0.85rem;
+      color: var(--ink-light);
+      text-align: right;
+      cursor: pointer;
+      background: none;
+      border: none;
+      padding: 0;
+      margin-top: -18px;
+      margin-bottom: 32px;
+      display: block;
+      width: 100%;
+    }
+
+    .login-forgot:hover { color: var(--ink); }
+
+    /* Begin button */
+    .login-begin-btn {
+      font-family: 'Jost', sans-serif;
+      font-size: 0.72rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      font-weight: 500;
+      width: 100%;
+      padding: 16px;
+      background: #3d5c41;
+      color: #f8f5f0;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      transition: background 0.15s;
+      margin-bottom: 28px;
+    }
+    .login-begin-btn:hover { background: #2e4530; }
+
+    /* Or continue with */
+    .login-or {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 0.6rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--ink-light);
+      margin-bottom: 16px;
+    }
+    .login-or::before, .login-or::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    /* Google button */
+    .login-google-btn {
+      font-family: 'Jost', sans-serif;
+      font-size: 0.68rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      font-weight: 500;
+      width: 100%;
+      padding: 14px;
+      background: var(--surface);
+      color: var(--ink);
+      border: 1px solid var(--border-mid);
+      border-radius: 4px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      transition: background 0.15s;
+    }
+    .login-google-btn:hover { background: var(--border); }
+
+    .auth-error {
+      font-size: 0.68rem;
+      color: #8b3a3a;
+      text-align: center;
+      min-height: 14px;
+      margin-top: 12px;
+    }
+
+    /* Desktop: side-by-side */
     @media (min-width: 768px) {
-      #page-login {
-        flex-direction: row;
-      }
+      #page-login { flex-direction: row; }
 
       .login-hero {
         flex: 1;
         min-height: 100vh;
-        padding: 80px 60px;
-        justify-content: center;
-        gap: 10px;
+        padding: 80px 64px;
+        justify-content: flex-end;
       }
 
-      .login-title {
-        font-size: 4rem;
-      }
+      .login-title { font-size: 5.5rem; }
 
       .login-card {
-        width: 420px;
+        width: 440px;
         flex: none;
-        padding: 80px 52px;
+        padding: 80px 56px;
         justify-content: center;
-        gap: 16px;
-        border-left: 1px solid var(--border);
         background: var(--surface);
+        border-left: 1px solid var(--border);
       }
     }
 
@@ -848,27 +958,49 @@
 <!-- ════════════════════════════════════════ -->
 <div id="page-login">
   <div class="login-hero">
-    <div class="login-eyebrow">Wellness Journal</div>
-    <div class="login-title">Daily <em>Nutrition</em></div>
+    <!-- Leaf icon -->
+    <svg class="login-hero-icon" viewBox="0 0 24 24" fill="none" stroke="#3d5c41" stroke-width="1.2">
+      <path d="M12 2C6 2 3 8 3 12c0 5 4 10 9 10s9-5 9-10C21 8 18 2 12 2z"/>
+      <path d="M12 2v20M3 12h18"/>
+    </svg>
+    <div class="login-title">Daily<br>Nutrition</div>
     <div class="login-subtitle">Track your nourishment, beautifully.</div>
+    <div class="login-hero-line"></div>
   </div>
 
   <div class="login-card">
-    <div class="login-section-label">Sign in to continue</div>
-
-    <button class="auth-google-btn" onclick="signIn()">Continue with Google</button>
-
-    <div class="auth-divider">or</div>
-
-    <div class="auth-email-fields">
-      <input type="email" id="auth-email" placeholder="Email address" />
-      <input type="password" id="auth-password" placeholder="Password" />
+    <!-- Tabs -->
+    <div class="login-tabs">
+      <button class="login-tab active" onclick="loginTab('signin')">Sign in</button>
+      <button class="login-tab" onclick="loginTab('create')">Create account</button>
     </div>
 
-    <div class="auth-email-btns">
-      <button class="auth-email-btn primary" onclick="signInEmail()">Sign in</button>
-      <button class="auth-email-btn secondary" onclick="signUpEmail()">Create account</button>
+    <!-- Email field -->
+    <div class="login-field">
+      <label>Email address</label>
+      <input type="email" id="auth-email" autocomplete="email" />
     </div>
+
+    <!-- Password field -->
+    <div class="login-field">
+      <label>Password</label>
+      <input type="password" id="auth-password" autocomplete="current-password" />
+    </div>
+
+    <!-- Forgot password (sign in only) -->
+    <button class="login-forgot" id="forgot-pw-btn" onclick="forgotPassword()">Forgot password?</button>
+
+    <!-- Begin button -->
+    <button class="login-begin-btn" id="login-begin-btn" onclick="signInEmail()">
+      Begin <span>→</span>
+    </button>
+
+    <!-- Or continue with Google -->
+    <div class="login-or">or continue with</div>
+    <button class="login-google-btn" onclick="signIn()">
+      <svg width="16" height="16" viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>
+      Continue with Google
+    </button>
 
     <div class="auth-error" id="auth-error"></div>
   </div>
@@ -1036,7 +1168,8 @@
   import { getAuth, GoogleAuthProvider, signInWithPopup, signInWithRedirect,
            getRedirectResult, onAuthStateChanged, signOut as fbSignOut,
            browserLocalPersistence, setPersistence,
-           createUserWithEmailAndPassword, signInWithEmailAndPassword }
+           createUserWithEmailAndPassword, signInWithEmailAndPassword,
+           sendPasswordResetEmail }
            from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
   import { getFirestore, doc, setDoc, onSnapshot }      from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
 
@@ -1059,6 +1192,31 @@
 
   // Ensure auth state persists across page loads on all browsers
   setPersistence(auth, browserLocalPersistence).catch(() => {});
+
+  // Toggle between Sign In and Create Account tabs
+  function loginTab(tab) {
+    const isSignIn = tab === 'signin';
+    document.querySelectorAll('.login-tab').forEach((t, i) => {
+      t.classList.toggle('active', isSignIn ? i === 0 : i === 1);
+    });
+    document.getElementById('forgot-pw-btn').style.display  = isSignIn ? 'block' : 'none';
+    document.getElementById('login-begin-btn').onclick = isSignIn ? signInEmail : signUpEmail;
+    document.getElementById('auth-password').autocomplete  = isSignIn ? 'current-password' : 'new-password';
+    authError('');
+  }
+
+  async function forgotPassword() {
+    const email = document.getElementById('auth-email').value.trim();
+    if (!email) return authError('Enter your email address first.');
+    try {
+      await sendPasswordResetEmail(auth, email);
+      authError('');
+      document.getElementById('auth-error').style.color = '#4a6e4e';
+      document.getElementById('auth-error').textContent = 'Reset email sent — check your inbox.';
+    } catch (e) {
+      authError('Could not send reset email. Check the address and try again.');
+    }
+  }
 
   function authError(msg) {
     const el = document.getElementById('auth-error');
@@ -1197,10 +1355,12 @@
   });
 
   // Expose auth functions to HTML onclick handlers
-  window.signIn       = signIn;
-  window.signInEmail  = signInEmail;
-  window.signUpEmail  = signUpEmail;
-  window.doSignOut    = doSignOut;
+  window.signIn          = signIn;
+  window.signInEmail     = signInEmail;
+  window.signUpEmail     = signUpEmail;
+  window.doSignOut       = doSignOut;
+  window.loginTab        = loginTab;
+  window.forgotPassword  = forgotPassword;
 
   // ── Storage (permanent key — never change) ──────────────────────────
   const STORAGE_KEY = 'cleanse_nutrition';
