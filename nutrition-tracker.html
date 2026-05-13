@@ -1105,7 +1105,7 @@
         <label>Protein (g)</label>
         <input type="number" id="meal-prot" placeholder="0" min="0" />
       </div>
-      <div class="field full">
+      <div class="field">
         <label>Meal type</label>
         <select id="meal-type">
           <option value="breakfast">Breakfast</option>
@@ -1113,6 +1113,10 @@
           <option value="dinner">Dinner</option>
           <option value="snack">Snack</option>
         </select>
+      </div>
+      <div class="field half-right">
+        <label>Date</label>
+        <input type="date" id="meal-date" />
       </div>
     </div>
     <button class="add-btn" onclick="addMeal()">Add to journal</button>
@@ -1475,8 +1479,8 @@
     const cal  = parseInt(document.getElementById('meal-cal').value)  || 0;
     const prot = parseInt(document.getElementById('meal-prot').value) || 0;
     const type = document.getElementById('meal-type').value;
+    const key  = document.getElementById('meal-date').value || todayKey();
     if (!name) { document.getElementById('meal-name').focus(); return; }
-    const key = todayKey();
     if (!allDays[key]) allDays[key] = [];
     allDays[key].push({ name, cal, prot, type });
     saveAllDays(allDays);
@@ -1486,6 +1490,8 @@
     document.getElementById('meal-prot').value = '';
     document.getElementById('estimate-hint').textContent = '';
     lastEstimate = { cal: null, prot: null };
+    // Reset date back to today after logging
+    document.getElementById('meal-date').value = todayKey();
     document.getElementById('meal-name').focus();
   }
 
@@ -2005,6 +2011,9 @@
   document.getElementById('today-date').textContent = now.toLocaleDateString('en-US', {
     weekday: 'long', month: 'long', day: 'numeric'
   });
+
+  // Default meal date picker to today (local time)
+  document.getElementById('meal-date').value = todayKey();
 
   render();
 
