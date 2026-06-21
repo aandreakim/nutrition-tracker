@@ -1,0 +1,2 @@
+- This is a simple AI food nutrition tracker. Enter what you ate and it will automatically estimate your calorie/protein intake.
+- Stack: Static HTML + Firebase backend
